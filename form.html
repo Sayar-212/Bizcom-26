@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Idea - Bizcom'26</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gold: #C9A96E;
+            --accent-blue: #6B73FF;
+            --deep-black: #0A0A0A;
+            --soft-white: #FAFAFA;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(ellipse at center, #0B0B0F 0%, #000000 100%);
+            color: var(--soft-white);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--primary-gold);
+            color: var(--primary-gold);
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .back-btn:hover {
+            background: var(--primary-gold);
+            color: var(--deep-black);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding-top: 4rem;
+        }
+
+        .title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #B8860B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(201, 169, 110, 0.05) 0%, rgba(107, 115, 255, 0.05) 100%);
+        }
+
+        .form-group {
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.8rem;
+            color: var(--primary-gold);
+            font-weight: 500;
+            font-size: 1.1rem;
+        }
+
+        input, textarea, select {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--soft-white);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        select {
+            background: rgba(10, 10, 10, 0.9);
+            color: var(--soft-white);
+        }
+
+        select option {
+            background: var(--deep-black);
+            color: var(--soft-white);
+            padding: 0.5rem;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-gold);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input {
+            opacity: 0;
+            position: absolute;
+            z-index: -1;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 1rem 1.5rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 2px dashed rgba(201, 169, 110, 0.5);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            word-break: break-all;
+            overflow-wrap: break-word;
+        }
+
+        .file-input-label:hover {
+            border-color: var(--primary-gold);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1.2rem;
+            background: linear-gradient(135deg, var(--primary-gold) 0%, #FFD700 100%);
+            border: none;
+            border-radius: 12px;
+            color: var(--deep-black);
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(201, 169, 110, 0.3);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            color: var(--primary-gold);
+            margin-top: 1rem;
+        }
+
+        .success-message {
+            display: none;
+            background: rgba(76, 175, 80, 0.1);
+            border: 1px solid rgba(76, 175, 80, 0.3);
+            color: #4CAF50;
+            padding: 1rem;
+            border-radius: 12px;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .thank-you-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .thank-you-content {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(30px);
+            border: 1px solid var(--primary-gold);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            max-width: 500px;
+            margin: 2rem;
+        }
+
+        .thank-you-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .thank-you-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2rem;
+            color: var(--primary-gold);
+            margin-bottom: 1rem;
+        }
+
+        .thank-you-text {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+                padding-top: 6rem;
+            }
+            .title {
+                font-size: 2rem;
+            }
+            .form-container {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="dashboard.html" class="back-btn">← Back to Dashboard</a>
+
+    <div class="container">
+        <h1 class="title">Submit Your Idea</h1>
+        
+        <div class="form-container">
+            <form id="ideaForm">
+                <div class="form-group">
+                    <label for="title">Idea Title *</label>
+                    <input type="text" id="title" name="title" required placeholder="Enter your innovative idea title">
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Category *</label>
+                    <select id="category" name="category" required>
+                        <option value="">Select a category</option>
+                        <option value="technology">Technology & Innovation</option>
+                        <option value="sustainability">Sustainability & Environment</option>
+                        <option value="healthcare">Healthcare & Wellness</option>
+                        <option value="education">Education & Learning</option>
+                        <option value="finance">Finance & Fintech</option>
+                        <option value="social">Social Impact</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description *</label>
+                    <textarea id="description" name="description" required placeholder="Describe your idea in detail. What problem does it solve? How does it work?"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="implementation">Implementation Plan</label>
+                    <textarea id="implementation" name="implementation" placeholder="How would you implement this idea? What resources would you need?"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="market">Target Market</label>
+                    <input type="text" id="market" name="market" placeholder="Who is your target audience?">
+                </div>
+
+                <div class="form-group">
+                    <label for="attachment">Supporting Documents</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="attachment" name="attachment" class="file-input" accept=".pdf,.doc,.docx,.ppt,.pptx,.jpg,.png">
+                        <label for="attachment" class="file-input-label">
+                            📎 Click to upload files (PDF, DOC, PPT, Images)
+                        </label>
+                    </div>
+                </div>
+
+                <button type="submit" class="submit-btn" id="submitBtn">
+                    Submit Idea
+                </button>
+
+                <div class="loading" id="loading">
+                    Submitting your idea...
+                </div>
+
+                <div class="success-message" id="successMessage">
+                    🎉 Your idea has been submitted successfully!
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Thank You Modal -->
+    <div class="thank-you-modal" id="thankYouModal">
+        <div class="thank-you-content">
+            <div class="thank-you-icon">🎉</div>
+            <h2 class="thank-you-title">Thank You!</h2>
+            <p class="thank-you-text">
+                Your innovative idea has been successfully submitted to Bizcom'26. 
+                Our evaluation team will review your submission and you'll be notified about the results soon.
+            </p>
+            <p style="color: var(--primary-gold); font-weight: 500;">
+                Redirecting to dashboard...
+            </p>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, collection, addDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAKmTuBeqneZyMrni9aKwLkXRBB018K2cI",
+            authDomain: "bizcom-39d83.firebaseapp.com",
+            projectId: "bizcom-39d83",
+            storageBucket: "bizcom-39d83.firebasestorage.app",
+            messagingSenderId: "514070473542",
+            appId: "1:514070473542:web:09016635c87fa2a672d347"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) window.location.href = 'login.html';
+        });
+
+        document.getElementById('attachment').addEventListener('change', (e) => {
+            const label = document.querySelector('.file-input-label');
+            if (e.target.files.length > 0) {
+                const fileName = e.target.files[0].name;
+                if (fileName.length > 30) {
+                    label.textContent = `📎 ${fileName.substring(0, 30)}...`;
+                } else {
+                    label.textContent = `📎 ${fileName}`;
+                }
+            } else {
+                label.textContent = '📎 Click to upload files (PDF, DOC, PPT, Images)';
+            }
+        });
+
+        document.getElementById('ideaForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            console.log('Form submitted');
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const loading = document.getElementById('loading');
+            
+            if (!auth.currentUser) {
+                alert('Please login first');
+                return;
+            }
+            
+            submitBtn.disabled = true;
+            loading.style.display = 'block';
+            
+            try {
+                console.log('Starting submission...');
+                const title = document.getElementById('title').value;
+                const category = document.getElementById('category').value;
+                const description = document.getElementById('description').value;
+                const implementation = document.getElementById('implementation').value;
+                const market = document.getElementById('market').value;
+                const file = document.getElementById('attachment').files[0];
+                
+                console.log('Form data collected:', { title, category, description });
+                
+                let fileURL = null;
+                let fileName = null;
+                
+                if (file) {
+                    try {
+                        console.log('Uploading file:', file.name);
+                        const storageRef = ref(storage, `ideas/${Date.now()}_${file.name}`);
+                        const snapshot = await uploadBytes(storageRef, file);
+                        fileURL = await getDownloadURL(snapshot.ref);
+                        fileName = file.name;
+                        console.log('File uploaded:', fileURL);
+                    } catch (fileError) {
+                        console.warn('File upload failed, continuing without file:', fileError);
+                        fileName = file.name + ' (upload failed)';
+                    }
+                }
+                
+                const ideaData = {
+                    title,
+                    category,
+                    description,
+                    implementation: implementation || '',
+                    market: market || '',
+                    fileURL,
+                    fileName: fileName,
+                    userId: auth.currentUser.uid,
+                    userEmail: auth.currentUser.email,
+                    userName: auth.currentUser.displayName || 'Anonymous',
+                    timestamp: new Date(),
+                    status: 'submitted'
+                };
+                
+                console.log('Saving to Firestore:', ideaData);
+                const docRef = await addDoc(collection(db, 'ideas'), ideaData);
+                console.log('Document written with ID: ', docRef.id);
+                
+                loading.style.display = 'none';
+                document.getElementById('thankYouModal').style.display = 'flex';
+                
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 3000);
+                
+            } catch (error) {
+                console.error('Detailed error:', error);
+                loading.style.display = 'none';
+                submitBtn.disabled = false;
+                
+                if (error.code === 'permission-denied') {
+                    alert('Database access denied. Please enable Firestore in Firebase Console.');
+                } else if (error.code === 'unavailable') {
+                    alert('Database unavailable. Please check your internet connection.');
+                } else {
+                    alert(`Error: ${error.message}`);
+                }
+            }
+        });
+    </script>
+</body>
+</html>

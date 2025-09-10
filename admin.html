@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Bizcom'26</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gold: #C9A96E;
+            --accent-blue: #6B73FF;
+            --deep-black: #0A0A0A;
+            --soft-white: #FAFAFA;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(ellipse at center, #0B0B0F 0%, #000000 100%);
+            color: var(--soft-white);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2rem;
+            background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #B8860B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stats {
+            display: flex;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            min-width: 150px;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-gold);
+        }
+
+        .ideas-container {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 2rem;
+        }
+
+        .idea-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .idea-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .idea-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-gold);
+        }
+
+        .idea-category {
+            background: rgba(107, 115, 255, 0.2);
+            color: var(--accent-blue);
+            padding: 0.3rem 0.8rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+        }
+
+        .idea-meta {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 0.5rem;
+        }
+
+        .loading {
+            text-align: center;
+            color: var(--primary-gold);
+            padding: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1 class="title">Admin Dashboard</h1>
+        <a href="dashboard.html" style="color: var(--primary-gold); text-decoration: none;">← Back</a>
+    </div>
+
+    <div class="stats">
+        <div class="stat-card">
+            <div class="stat-number" id="totalIdeas">0</div>
+            <div>Total Ideas</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number" id="todayIdeas">0</div>
+            <div>Today</div>
+        </div>
+    </div>
+
+    <div class="ideas-container">
+        <h2 style="margin-bottom: 1.5rem; color: var(--primary-gold);">Submitted Ideas</h2>
+        <div id="ideasList" class="loading">Loading ideas...</div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, collection, onSnapshot, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAKmTuBeqneZyMrni9aKwLkXRBB018K2cI",
+            authDomain: "bizcom-39d83.firebaseapp.com",
+            projectId: "bizcom-39d83",
+            storageBucket: "bizcom-39d83.firebasestorage.app",
+            messagingSenderId: "514070473542",
+            appId: "1:514070473542:web:09016635c87fa2a672d347"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const q = query(collection(db, 'ideas'), orderBy('timestamp', 'desc'));
+            onSnapshot(q, (snapshot) => {
+                const ideas = [];
+                const today = new Date().toDateString();
+                let todayCount = 0;
+
+                snapshot.forEach((doc) => {
+                    const idea = { id: doc.id, ...doc.data() };
+                    ideas.push(idea);
+                    
+                    if (idea.timestamp?.toDate().toDateString() === today) {
+                        todayCount++;
+                    }
+                });
+
+                document.getElementById('totalIdeas').textContent = ideas.length;
+                document.getElementById('todayIdeas').textContent = todayCount;
+
+                const ideasList = document.getElementById('ideasList');
+                if (ideas.length === 0) {
+                    ideasList.innerHTML = '<p style="text-align: center; color: rgba(255,255,255,0.6);">No ideas submitted yet.</p>';
+                } else {
+                    ideasList.innerHTML = ideas.map(idea => `
+                        <div class="idea-card">
+                            <div class="idea-header">
+                                <div class="idea-title">${idea.title}</div>
+                                <div class="idea-category">${idea.category}</div>
+                            </div>
+                            <div class="idea-meta">
+                                By: ${idea.userName || idea.userEmail} | 
+                                ${idea.timestamp?.toDate().toLocaleDateString()}
+                            </div>
+                            <p style="color: rgba(255,255,255,0.8); line-height: 1.5;">
+                                ${idea.description?.substring(0, 200)}${idea.description?.length > 200 ? '...' : ''}
+                            </p>
+                            ${idea.fileURL ? `<p style="margin-top: 0.5rem;"><a href="${idea.fileURL}" target="_blank" style="color: var(--primary-gold);">📎 ${idea.fileName}</a></p>` : ''}
+                        </div>
+                    `).join('');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

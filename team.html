@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bizcom'26 - Team</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gold: #C9A96E;
+            --accent-blue: #6B73FF;
+            --deep-black: #0A0A0A;
+            --soft-white: #FAFAFA;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(ellipse at center, #0B0B0F 0%, #000000 100%);
+            color: var(--soft-white);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .navbar {
+            position: absolute;
+            top: 2rem;
+            left: 3rem;
+            right: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .nav-left, .nav-right {
+            display: flex;
+            gap: 2rem;
+            flex: 1;
+        }
+
+        .nav-right {
+            justify-content: flex-end;
+        }
+
+        .nav-logos {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            align-items: center;
+            flex: 2;
+        }
+
+        .nav-logo {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-logo:hover {
+            transform: scale(1.1);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 0.5rem 0;
+            font-family: serif;
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            color: var(--primary-gold);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding-top: 8rem;
+        }
+
+        .title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 4rem;
+            background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #B8860B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section {
+            margin-bottom: 6rem;
+        }
+
+        .section-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2rem;
+            color: var(--primary-gold);
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 2px;
+            background: var(--accent-blue);
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            justify-items: center;
+        }
+
+        .member-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            max-width: 350px;
+            width: 100%;
+        }
+
+        .member-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-gold);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .member-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            border: 3px solid var(--primary-gold);
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .member-card:hover .member-image {
+            transform: scale(1.05);
+        }
+
+        .member-name {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.5rem;
+            color: var(--soft-white);
+            margin-bottom: 0.5rem;
+        }
+
+        .member-role {
+            color: var(--primary-gold);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .member-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--primary-gold);
+            color: var(--primary-gold);
+            padding: 0.3rem 0.6rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.8rem;
+            z-index: 1001;
+        }
+
+        .back-button:hover {
+            background: var(--primary-gold);
+            color: var(--deep-black);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 6rem 1rem 2rem;
+            }
+            .title {
+                font-size: 2rem;
+            }
+            .team-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .navbar {
+                left: 1rem;
+                right: 1rem;
+            }
+            .nav-logos {
+                gap: 1rem;
+            }
+            .nav-logo {
+                width: 50px;
+                height: 50px;
+            }
+            .back-button {
+                top: 0.5rem;
+                left: 0.5rem;
+                padding: 0.25rem 0.5rem;
+                font-size: 0.7rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="back-button" onclick="history.back()">← Back</button>
+
+    <nav class="navbar">
+        <div class="nav-left">
+            <button class="nav-btn" onclick="window.open('https://hbs.edu.in', '_blank')">Institute</button>
+            <button class="nav-btn" onclick="window.location.href='archive.html'">Archive</button>
+        </div>
+        <div class="nav-logos">
+            <img src="https://jaipuriambaeduin6bc80.zapwp.com/q:i/r:0/wp:1/w:480/u:https://jaipuriamba.edu.in/wp-content/uploads/2022/02/iiclogo-1.png" alt="IIC Logo" class="nav-logo">
+            <img src="https://spcputtur.ac.in/img/containers/main/MoE-Logo.png/20187deb5f98ab67f8c5be8762cba7be.webp" alt="MoE Logo" class="nav-logo">
+            <img src="https://hbs.edu.in/images/logo.png" alt="HBS Logo" class="nav-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/en/e/eb/All_India_Council_for_Technical_Education_logo.png" alt="AICTE Logo" class="nav-logo">
+            <img src="https://i.ibb.co/Xr7D3Vny/image-2.png" alt="Ministry of Education Logo" class="nav-logo">
+        </div>
+        <div class="nav-right">
+            <button class="nav-btn">Team</button>
+            <button class="nav-btn" onclick="window.location.href='president.html'">President</button>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1 class="title">Our Team</h1>
+
+        <!-- Technical Team -->
+        <section class="section">
+            <h2 class="section-title">Technical Team</h2>
+            <div class="team-grid">
+                <div class="member-card">
+                    <img src="https://media.licdn.com/dms/image/v2/D5603AQHgcHeqssZI2Q/profile-displayphoto-shrink_400_400/B56ZUxhiP4GsAg-/0/1740292631544?e=1760572800&v=beta&t=ulyWo4Nbwz-pZCIjms8WRKNF3jgBFr5RW38NSIjBOmM" alt="Dedipta Saha" class="member-image">
+                    <h3 class="member-name">Dedipta Saha</h3>
+                    <p class="member-role">Technical Operations Lead</p>
+                    <p class="member-description">MBA Final Year, HBS and TLO @ Sun Knowledge Systems</p>
+                </div>
+                <div class="member-card">
+                    <img src="https://media.licdn.com/dms/image/v2/D5603AQFTtPIYkSHCIg/profile-displayphoto-shrink_400_400/B56ZcLvTryGsAo-/0/1748248641030?e=1760572800&v=beta&t=mRpeV6x7iJZy2b11be5FSKI7ad6ZkKyMX4MBWE3oQNU" alt="Sayar Basu" class="member-image">
+                    <h3 class="member-name">Sayar Basu</h3>
+                    <p class="member-role">Technical Lead & Developer</p>
+                    <p class="member-description">Btech Final year HITK and SDE at Visteon</p>
+                </div>
+                <div class="member-card">
+                    <img src="https://media.licdn.com/dms/image/v2/D4D03AQFeQRmIol48Mg/profile-displayphoto-scale_400_400/B4DZjlLbAxGgAg-/0/1756191634453?e=1760572800&v=beta&t=gjjABJui2YMxKibDwN4A0KKVh8Iv2IhV-7cj1XYrrnA" alt="Pradip Maity" class="member-image">
+                    <h3 class="member-name">Pradip Maity</h3>
+                    <p class="member-role">Technical Developer</p>
+                    <p class="member-description">Btech Final year HITK and SDE at Visteon</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Organizer Team -->
+        <section class="section">
+            <h2 class="section-title">Organizer Team</h2>
+            <div class="team-grid">
+                <div class="member-card">
+                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&fit=crop&crop=face" alt="Emily Davis" class="member-image">
+                    <h3 class="member-name">Emily Davis</h3>
+                    <p class="member-role">Event Coordinator</p>
+                    <p class="member-description">Experienced event manager with a passion for creating memorable experiences. Specializes in large-scale competition management and logistics.</p>
+                </div>
+                <div class="member-card">
+                    <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=300&h=300&fit=crop&crop=face" alt="David Kim" class="member-image">
+                    <h3 class="member-name">David Kim</h3>
+                    <p class="member-role">Operations Manager</p>
+                    <p class="member-description">Strategic planner focused on operational excellence. Ensures seamless execution of all competition phases and participant coordination.</p>
+                </div>
+                <div class="member-card">
+                    <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=300&h=300&fit=crop&crop=face" alt="Lisa Thompson" class="member-image">
+                    <h3 class="member-name">Lisa Thompson</h3>
+                    <p class="member-role">Program Director</p>
+                    <p class="member-description">Educational program specialist with expertise in entrepreneurship development. Designs engaging content and mentorship programs.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- PR Team -->
+        <section class="section">
+            <h2 class="section-title">PR Team</h2>
+            <div class="team-grid">
+                <div class="member-card">
+                    <img src="https://images.unsplash.com/photo-1507101105822-7472b28e22ac?w=300&h=300&fit=crop&crop=face" alt="James Wilson" class="member-image">
+                    <h3 class="member-name">James Wilson</h3>
+                    <p class="member-role">Communications Lead</p>
+                    <p class="member-description">Strategic communications expert with a talent for storytelling. Manages media relations and builds strong community engagement.</p>
+                </div>
+                <div class="member-card">
+                    <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=300&h=300&fit=crop&crop=face" alt="Maria Garcia" class="member-image">
+                    <h3 class="member-name">Maria Garcia</h3>
+                    <p class="member-role">Social Media Manager</p>
+                    <p class="member-description">Digital marketing specialist with expertise in social media strategy. Creates compelling content that resonates with diverse audiences.</p>
+                </div>
+                <div class="member-card">
+                    <img src="https://images.unsplash.com/photo-1463453091185-61582044d556?w=300&h=300&fit=crop&crop=face" alt="Ryan Parker" class="member-image">
+                    <h3 class="member-name">Ryan Parker</h3>
+                    <p class="member-role">Brand Manager</p>
+                    <p class="member-description">Brand strategist focused on maintaining consistent messaging and visual identity. Ensures all communications align with BIZCOM values.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+</html>

@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bizcom'26 - Initial Screening Results</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Uncial+Antiqua&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/samarkan" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/trajan-pro-3" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    
+    <style>
+
+        
+        :root {
+            --primary-gold: #D4AF37;
+            --accent-blue: #4A90E2;
+            --deep-black: #000000;
+            --dark-navy: #0B0B0F;
+            --midnight: #1A1A1E;
+            --soft-white: #F8F9FA;
+            --glass-white: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(ellipse at center, #0B0B0F 0%, #000000 100%);
+            color: var(--soft-white);
+            overflow-x: hidden;
+            cursor: none;
+            min-height: 100vh;
+            position: relative;
+        }
+
+
+
+        /* Custom Cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary-gold);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: all 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            backdrop-filter: blur(2px);
+        }
+
+        .cursor.hover {
+            transform: scale(2.5);
+            border-color: var(--accent-blue);
+            background: rgba(74, 144, 226, 0.1);
+        }
+
+        /* Elegant Loader */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--deep-black);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .loader-content {
+            text-align: center;
+        }
+
+        .loader-title {
+            font-family: 'Trajan Pro 3', 'Samarkan', 'Cinzel Decorative', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: 0.25em;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.5s forwards;
+            background: linear-gradient(135deg, #B8860B 0%, #DAA520 25%, #FFD700 50%, #DAA520 75%, #B8860B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.4));
+        }
+
+        .loader-subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease 1s forwards;
+            letter-spacing: 0.1em;
+        }
+
+        .progress-container {
+            width: 400px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 1px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary-gold), var(--accent-blue));
+            transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 20px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6));
+            animation: shimmer 1s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-20px); }
+            100% { transform: translateX(20px); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            margin-top: 12rem;
+        }
+
+        .hero-title {
+            font-family: 'Trajan Pro 3', 'Cinzel Decorative', serif;
+            font-size: 8rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            letter-spacing: 0.3em;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: heroEnter 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 2s forwards;
+            background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 30%, #D4AF37 70%, #FFD700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+            filter: drop-shadow(0 0 30px rgba(59, 130, 246, 0.4));
+        }
+
+        .hero-subtitle {
+            font-family: 'Samarkan', 'Trajan Pro 3', 'Cinzel Decorative', serif;
+            font-size: 2.2rem;
+            font-weight: 400;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: heroEnter 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 2.5s forwards;
+            letter-spacing: 0.15em;
+            background: linear-gradient(135deg, #FFFFFF 0%, #10B981 50%, #059669 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Transparent Navigation */
+        .navbar {
+            position: absolute;
+            top: 2rem;
+            left: 3rem;
+            right: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            animation: fadeIn 1s ease 2s forwards;
+        }
+
+        .nav-left, .nav-right {
+            display: flex;
+            gap: 2rem;
+            flex: 1;
+        }
+
+        .nav-right {
+            justify-content: flex-end;
+        }
+
+        .nav-logos {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            align-items: center;
+            flex: 2;
+        }
+
+        .nav-logo {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-logo:hover {
+            transform: scale(1.1);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 0.5rem 0;
+            font-family: serif;
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            color: var(--primary-gold);
+        }
+
+        .hero-teaser {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #B8860B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: heroEnter 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.5s forwards;
+            position: relative;
+        }
+
+        .hero-teaser::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary-gold), transparent);
+        }
+
+
+
+        @keyframes heroEnter {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 60px;
+            background: linear-gradient(to bottom, var(--primary-gold), transparent);
+            cursor: pointer;
+            opacity: 0;
+            animation: fadeIn 1s ease 3.5s forwards;
+        }
+
+        .scroll-indicator::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background: var(--primary-gold);
+            border-radius: 50%;
+            animation: scrollDot 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollDot {
+            0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+            50% { transform: translateX(-50%) translateY(40px); opacity: 0.3; }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Hero Quote */
+        .hero-quote {
+            text-align: center;
+            margin: 2rem auto;
+            max-width: 600px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: heroEnter 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 3s forwards;
+        }
+
+        .hero-quote blockquote {
+            font-family: 'Cinzel', serif;
+            font-size: 1.4rem;
+            font-style: italic;
+            color: var(--primary-gold);
+            margin-bottom: 0.8rem;
+            line-height: 1.3;
+        }
+
+        .hero-quote cite {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+            font-style: normal;
+            letter-spacing: 0.05em;
+        }
+
+        /* Glass Morphism Sections */
+        .section {
+            padding: 8rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .glass-container {
+            background: var(--glass-white);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 4rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary-gold), transparent);
+        }
+
+        .section-title {
+            font-family: serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            letter-spacing: 0.2em;
+            background: linear-gradient(135deg, #B8860B 0%, #DAA520 25%, #FFD700 50%, #DAA520 75%, #B8860B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(255, 215, 0, 0.5);
+            filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.3));
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 2px;
+            background: var(--accent-blue);
+        }
+
+        /* Elegant Podium */
+        .podium-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 3rem;
+            margin-bottom: 6rem;
+            perspective: 1000px;
+        }
+
+        .podium {
+            position: relative;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .podium:hover {
+            transform: translateY(-10px) scale(1.02);
+        }
+
+        .podium-platform {
+            background: var(--glass-white);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2.5rem 2rem 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .podium:nth-child(1) .podium-platform {
+            height: 320px;
+            width: 220px;
+            border-top: 3px solid var(--primary-gold);
+        }
+
+        .podium:nth-child(2) .podium-platform {
+            height: 280px;
+            width: 200px;
+            border-top: 3px solid #C0C0C0;
+        }
+
+        .podium:nth-child(3) .podium-platform {
+            height: 240px;
+            width: 180px;
+            border-top: 3px solid #CD7F32;
+        }
+
+        .podium-rank {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            background: var(--primary-gold);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--deep-black);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .team-name {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--soft-white);
+            margin: 2rem 0 1rem;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            letter-spacing: 0.05em;
+        }
+
+        .team-name.revealed {
+            opacity: 1;
+            color: var(--primary-gold);
+        }
+
+        .team-number {
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .team-score {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            background: rgba(74, 144, 226, 0.1);
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(74, 144, 226, 0.3);
+            letter-spacing: 0.05em;
+        }
+
+        /* Elegant Rankings Grid */
+        .rankings-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .rank-card {
+            background: var(--glass-white);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .rank-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, var(--primary-gold), var(--accent-blue));
+        }
+
+        .rank-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+            border-color: var(--primary-gold);
+        }
+
+        .rank-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .rank-position {
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-gold);
+        }
+
+        .card-team-name {
+            font-family: 'Cinzel', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--soft-white);
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            letter-spacing: 0.05em;
+        }
+
+        .card-team-name.revealed {
+            opacity: 1;
+            color: var(--primary-gold);
+        }
+
+        .card-team-number {
+            font-family: 'Cinzel', serif;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .score-container {
+            margin-top: 1.5rem;
+        }
+
+        .score-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .score-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary-gold), var(--accent-blue));
+            border-radius: 3px;
+            transition: width 2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .score-value {
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent-blue);
+            text-align: right;
+            letter-spacing: 0.05em;
+        }
+
+        /* Chart Section */
+        .chart-container {
+            background: var(--glass-white);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-top: 3rem;
+            height: 600px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 6rem 2rem;
+            background: var(--glass-white);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+            margin-top: 4rem;
+        }
+
+        .footer h2 {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: var(--primary-gold);
+            margin-bottom: 2rem;
+            letter-spacing: 0.1em;
+        }
+
+        .footer p {
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 800px;
+            margin: 0 auto 1.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .copyright {
+            margin-top: 3rem;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 4rem; }
+            .hero-subtitle { font-size: 1.4rem; }
+            .section-title { font-size: 2.5rem; }
+            .section { padding: 4rem 1rem; }
+            .glass-container { padding: 2rem; }
+            .podium-container { flex-direction: column; align-items: center; gap: 2rem; }
+            .rankings-grid { grid-template-columns: 1fr; }
+            .chart-container { height: 400px; padding: 2rem; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title { font-size: 3rem; }
+            .loader-title { font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <button class="nav-btn" onclick="window.open('https://hbs.edu.in', '_blank')">Institute</button>
+            <button class="nav-btn" onclick="window.location.href='archive.html'">Archive</button>
+        </div>
+        <div class="nav-logos">
+            <img src="https://jaipuriambaeduin6bc80.zapwp.com/q:i/r:0/wp:1/w:480/u:https://jaipuriamba.edu.in/wp-content/uploads/2022/02/iiclogo-1.png" alt="IIC Logo" class="nav-logo">
+            <img src="https://spcputtur.ac.in/img/containers/main/MoE-Logo.png/20187deb5f98ab67f8c5be8762cba7be.webp" alt="MoE Logo" class="nav-logo">
+            <img src="https://hbs.edu.in/images/logo.png" alt="HBS Logo" class="nav-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/en/e/eb/All_India_Council_for_Technical_Education_logo.png" alt="AICTE Logo" class="nav-logo">
+            <img src="https://i.ibb.co/Xr7D3Vny/image-2.png" alt="Ministry of Education Logo" class="nav-logo">
+        </div>
+        <div class="nav-right">
+            <button class="nav-btn" onclick="window.location.href='team.html'">Team</button>
+            <button class="nav-btn" onclick="window.location.href='president.html'">President</button>
+        </div>
+    </nav>
+
+
+
+    <!-- Elegant Loader -->
+    <div class="loader">
+        <div class="loader-content">
+            <div class="loader-title">BIZCOM'26</div>
+            <div class="loader-subtitle">Where Innovation Speaks Business</div>
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-teaser">IIC-HBS presents</div>
+            <h1 class="hero-title">BIZCOM'26</h1>
+            <p class="hero-subtitle">Initial Screening Results</p>
+            <div class="hero-quote">
+                <blockquote>
+                    "Innovation distinguishes between a leader and a follower."
+                </blockquote>
+                <cite>— Steve Jobs</cite>
+            </div>
+            <div class="typing-animation">
+                <span class="typing-text"></span>
+                <span class="cursor-blink">|</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Top 3 Podium -->
+    <section class="section">
+        <div class="glass-container">
+            <h2 class="section-title">TOP PERFORMERS</h2>
+            <div class="podium-container">
+                <div class="podium" data-rank="1">
+                    <div class="podium-rank">1</div>
+                    <div class="podium-platform">
+                        <div class="team-name">Blue Phoenix</div>
+                        <div class="team-number">Team #11</div>
+                        <div class="team-score">76.9</div>
+                    </div>
+                </div>
+                <div class="podium" data-rank="2">
+                    <div class="podium-rank">2</div>
+                    <div class="podium-platform">
+                        <div class="team-name">NeuroNav</div>
+                        <div class="team-number">Team #17</div>
+                        <div class="team-score">75.4</div>
+                    </div>
+                </div>
+                <div class="podium" data-rank="3">
+                    <div class="podium-rank">3</div>
+                    <div class="podium-platform">
+                        <div class="team-name">Bunchhh</div>
+                        <div class="team-number">Team #36</div>
+                        <div class="team-score">69.7</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rankings Section -->
+    <section class="section">
+        <div class="glass-container">
+            <h2 class="section-title">COMPLETE RANKINGS</h2>
+            <div class="rankings-grid" id="rankings-grid">
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#1</div></div><div class="card-team-name">Blue Phoenix</div><div class="card-team-number">Team #11</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="76.9"></div></div><div class="score-value">76.9 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#2</div></div><div class="card-team-name">NeuroNav</div><div class="card-team-number">Team #17</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="75.4"></div></div><div class="score-value">75.4 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#3</div></div><div class="card-team-name">Bunchhh</div><div class="card-team-number">Team #36</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="69.7"></div></div><div class="score-value">69.7 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#4</div></div><div class="card-team-name">AquaSense</div><div class="card-team-number">Team #26</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="65.8"></div></div><div class="score-value">65.8 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#5</div></div><div class="card-team-name">BinBucks - Raddi to Rewards</div><div class="card-team-number">Team #5</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="64.5"></div></div><div class="score-value">64.5 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#6</div></div><div class="card-team-name">Dekha Kya</div><div class="card-team-number">Team #7</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="64.4"></div></div><div class="score-value">64.4 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#7</div></div><div class="card-team-name">Armor</div><div class="card-team-number">Team #25</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="64.1"></div></div><div class="score-value">64.1 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#8</div></div><div class="card-team-name">Attend QR</div><div class="card-team-number">Team #35</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="60.1"></div></div><div class="score-value">60.1 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#9</div></div><div class="card-team-name">Trafix</div><div class="card-team-number">Team #29</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="60.0"></div></div><div class="score-value">60.0 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#10</div></div><div class="card-team-name">Mom's Care</div><div class="card-team-number">Team #30</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="59.3"></div></div><div class="score-value">59.3 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#11</div></div><div class="card-team-name">SenZ Headphones</div><div class="card-team-number">Team #14</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="58.8"></div></div><div class="score-value">58.8 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#12</div></div><div class="card-team-name">Swakala</div><div class="card-team-number">Team #20</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="57.8"></div></div><div class="score-value">57.8 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#13</div></div><div class="card-team-name">Gharana</div><div class="card-team-number">Team #31</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="56.0"></div></div><div class="score-value">56.0 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#14</div></div><div class="card-team-name">URGENT</div><div class="card-team-number">Team #33</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="55.2"></div></div><div class="score-value">55.2 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#15</div></div><div class="card-team-name">Wheel Care</div><div class="card-team-number">Team #9</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="54.9"></div></div><div class="score-value">54.9 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#16</div></div><div class="card-team-name">Medi Care</div><div class="card-team-number">Team #32</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="54.7"></div></div><div class="score-value">54.7 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#17</div></div><div class="card-team-name">Farmnest</div><div class="card-team-number">Team #10</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="54.5"></div></div><div class="score-value">54.5 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#18</div></div><div class="card-team-name">My farm</div><div class="card-team-number">Team #3</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="54.5"></div></div><div class="score-value">54.5 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#19</div></div><div class="card-team-name">Decentralised Digital Identity</div><div class="card-team-number">Team #27</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="53.8"></div></div><div class="score-value">53.8 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#20</div></div><div class="card-team-name">Retail Sence AI</div><div class="card-team-number">Team #4</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="52.6"></div></div><div class="score-value">52.6 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#21</div></div><div class="card-team-name">Waste2Wow</div><div class="card-team-number">Team #23</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="50.6"></div></div><div class="score-value">50.6 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#22</div></div><div class="card-team-name">Custardly</div><div class="card-team-number">Team #34</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="50.0"></div></div><div class="score-value">50.0 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#23</div></div><div class="card-team-name">Blisst</div><div class="card-team-number">Team #15</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="49.9"></div></div><div class="score-value">49.9 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#24</div></div><div class="card-team-name">STYLEWISE AI</div><div class="card-team-number">Team #16</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="48.7"></div></div><div class="score-value">48.7 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#25</div></div><div class="card-team-name">Building Wealth through Smart Swings Trading</div><div class="card-team-number">Team #2</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="48.2"></div></div><div class="score-value">48.2 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#26</div></div><div class="card-team-name">CosCraft</div><div class="card-team-number">Team #18</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="47.4"></div></div><div class="score-value">47.4 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#27</div></div><div class="card-team-name">CraftCove</div><div class="card-team-number">Team #12</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="47.1"></div></div><div class="score-value">47.1 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#28</div></div><div class="card-team-name">Waste 2 Wealth</div><div class="card-team-number">Team #8</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="46.6"></div></div><div class="score-value">46.6 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#29</div></div><div class="card-team-name">Lüfta</div><div class="card-team-number">Team #13</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="46.3"></div></div><div class="score-value">46.3 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#30</div></div><div class="card-team-name">AI Career Navigator</div><div class="card-team-number">Team #6</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="45.5"></div></div><div class="score-value">45.5 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#31</div></div><div class="card-team-name">DIY Air Purifier Kit</div><div class="card-team-number">Team #22</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="45.4"></div></div><div class="score-value">45.4 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#32</div></div><div class="card-team-name">DilConnect-Beyond Words</div><div class="card-team-number">Team #19</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="44.4"></div></div><div class="score-value">44.4 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#33</div></div><div class="card-team-name">Marid</div><div class="card-team-number">Team #21</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="41.8"></div></div><div class="score-value">41.8 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#34</div></div><div class="card-team-name">LWT</div><div class="card-team-number">Team #24</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="40.7"></div></div><div class="score-value">40.7 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#35</div></div><div class="card-team-name">Elektrowaste</div><div class="card-team-number">Team #28</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="36.2"></div></div><div class="score-value">36.2 pts</div></div></div>
+                <div class="rank-card"><div class="rank-header"><div class="rank-position">#36</div></div><div class="card-team-name">Green Dukan</div><div class="card-team-number">Team #1</div><div class="score-container"><div class="score-bar"><div class="score-fill" data-score="32.4"></div></div><div class="score-value">32.4 pts</div></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Chart Section -->
+    <section class="section">
+        <div class="glass-container">
+            <h2 class="section-title">PERFORMANCE ANALYTICS</h2>
+            <div class="chart-container">
+                <canvas id="performance-chart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <h2>CONGRATULATIONS TO ALL ENTREPRENEURS</h2>
+        <p>Each team has showcased remarkable entrepreneurial flair, creative ingenuity, and business acumen during this challenge.</p>
+        <p>Your ideas are not just concepts — they are the seeds of future ventures, destined to redefine industries and inspire change.</p>
+        <div class="copyright">© 2026 Bizcom - HBS. All rights reserved.</div>
+    </footer>
+
+    <script>
+        // Teams Data
+        const teamsData = [
+            { rank: 1, name: "Blue Phoenix", number: 11, score: 76.9 },
+            { rank: 2, name: "NeuroNav", number: 17, score: 75.4 },
+            { rank: 3, name: "Bunchhh", number: 36, score: 69.7 },
+            { rank: 4, name: "AquaSense", number: 26, score: 65.8 },
+            { rank: 5, name: "BinBucks - Raddi to Rewards", number: 5, score: 64.5 },
+            { rank: 6, name: "Dekha Kya", number: 7, score: 64.4 },
+            { rank: 7, name: "Armor", number: 25, score: 64.1 },
+            { rank: 8, name: "Attend QR", number: 35, score: 60.1 },
+            { rank: 9, name: "Trafix", number: 29, score: 60.0 },
+            { rank: 10, name: "Mom's Care", number: 30, score: 59.3 },
+            { rank: 11, name: "SenZ Headphones", number: 14, score: 58.8 },
+            { rank: 12, name: "Swakala", number: 20, score: 57.8 },
+            { rank: 13, name: "Gharana", number: 31, score: 56.0 },
+            { rank: 14, name: "URGENT", number: 33, score: 55.2 },
+            { rank: 15, name: "Wheel Care", number: 9, score: 54.9 },
+            { rank: 16, name: "Medi Care", number: 32, score: 54.7 },
+            { rank: 17, name: "Farmnest", number: 10, score: 54.5 },
+            { rank: 18, name: "My farm", number: 3, score: 54.5 },
+            { rank: 19, name: "Decentralised Digital Identity", number: 27, score: 53.8 },
+            { rank: 20, name: "Retail Sence AI", number: 4, score: 52.6 },
+            { rank: 21, name: "Waste2Wow", number: 23, score: 50.6 },
+            { rank: 22, name: "Custardly", number: 34, score: 50.0 },
+            { rank: 23, name: "Blisst", number: 15, score: 49.9 },
+            { rank: 24, name: "STYLEWISE AI", number: 16, score: 48.7 },
+            { rank: 25, name: "Building Wealth through Smart Swings Trading", number: 2, score: 48.2 },
+            { rank: 26, name: "CosCraft", number: 18, score: 47.4 },
+            { rank: 27, name: "CraftCove", number: 12, score: 47.1 },
+            { rank: 28, name: "Waste 2 Wealth", number: 8, score: 46.6 },
+            { rank: 29, name: "Lüfta", number: 13, score: 46.3 },
+            { rank: 30, name: "AI Career Navigator", number: 6, score: 45.5 },
+            { rank: 31, name: "DIY Air Purifier Kit", number: 22, score: 45.4 },
+            { rank: 32, name: "DilConnect-Beyond Words", number: 19, score: 44.4 },
+            { rank: 33, name: "Marid", number: 21, score: 41.8 },
+            { rank: 34, name: "LWT", number: 24, score: 40.7 },
+            { rank: 35, name: "Elektrowaste", number: 28, score: 36.2 },
+            { rank: 36, name: "Green Dukan", number: 1, score: 32.4 }
+        ];
+
+        // PDF Links
+        const pdfLinks = {
+            1: "https://drive.google.com/file/d/1WsQCbTdNfwCuoH-BiAlzfSuZjOCd7OGD/view?usp=drive_link",
+            2: "https://drive.google.com/file/d/1jC0g_qDTWClCl3r1aWu0siCqBPaKSck4/view?usp=drive_link",
+            3: "https://drive.google.com/file/d/1xeLuugqy1OJgnr9HJBfhtzPKyM5nD5Y1/view?usp=drive_link",
+            4: "https://drive.google.com/file/d/1XM6M59SYUTx_N-HRViXD_-bQ12p9FpsE/view?usp=drive_link",
+            5: "https://drive.google.com/file/d/10vk_E3CdHTk2AOMbrERUpImFsAmKvHvH/view?usp=drive_link",
+            6: "https://drive.google.com/file/d/1pBnhnhEhPO3_8-xnyIqaDVqCNx54L6ha/view?usp=drive_link",
+            7: "https://drive.google.com/file/d/1IhSYwk-w1JmU1vBxQHSx8_As8Z1Nbl/view?usp=drive_link",
+            8: "https://drive.google.com/file/d/1hSyBq1vmP5VM_3FO2PZXi-e6ftDvSsdt/view?usp=drive_link",
+            9: "https://drive.google.com/file/d/1iXUpkyKOFiyMmeEWujFbXdPS1ShZN3cu/view?usp=drive_link",
+            10: "https://drive.google.com/file/d/1NiJkrenOj6CSOc7wQubVrUK3LphsygBj/view?usp=drive_link",
+            11: "https://drive.google.com/file/d/1jJWQLJ6fXFCbvUf5I0vIDg8bYjYK3C6J/view?usp=drive_link",
+            12: "https://drive.google.com/file/d/1LToJiuEr3gQwRc_2CzA4s4ndM1WBMH4I/view?usp=drive_link",
+            13: "https://drive.google.com/file/d/1pIDRScMSWzJsSraSBieJHqY6zoh58aUn/view?usp=drive_link",
+            14: "https://drive.google.com/file/d/15aIqD_fa7v16XFZpcS-nzcOBiJrVjXf2/view?usp=drive_link",
+            15: "https://drive.google.com/file/d/1XWCDT8aOZ8FG1QZ_oCUOTtVLvqsLqRG2/view?usp=drive_link",
+            16: "https://drive.google.com/file/d/1wzL5iqWMKvTgxJQOt8bljb2e8-tG5sC_/view?usp=drive_link",
+            17: "https://drive.google.com/file/d/1qC8Ni25-j6PT_kp5gapYLEx3p9mK8XM6/view?usp=drive_link",
+            18: "https://drive.google.com/file/d/11l93CxhgxDRukSDDP2dXXYaEvkaTjCVh/view?usp=drive_link",
+            19: "https://drive.google.com/file/d/1V3bPkMq1NbcSAmJ5EkWLaZtNKGlo9MuV/view?usp=drive_link",
+            20: "https://drive.google.com/file/d/1oTv2631EGEHg2dFs_wgJZOpMoMLUt8oY/view?usp=drive_link",
+            21: "https://drive.google.com/file/d/1VOsmM8BBsvwYP1qarRmj20QzZh0vUMlK/view?usp=drive_link",
+            22: "https://drive.google.com/file/d/1GZlBqYHPIlgwo78yWiPCDIxAr5cYa1wY/view?usp=drive_link",
+            23: "https://drive.google.com/file/d/14zqHac6sbn4IjmuWouddydDZyFU8Q7LM/view?usp=drive_link",
+            24: "https://drive.google.com/file/d/1hd_TGPHak9via4XJRtxuPPrqlPe-AAus/view?usp=drive_link",
+            25: "https://drive.google.com/file/d/1sbNVfMmmnvxjJFKtxoBR8b9mNDCBXk0s/view?usp=drive_link",
+            26: "https://drive.google.com/file/d/1DXi2UFGuIVhF0c9BERsIlp40DkEZjxf_/view?usp=drive_link",
+            27: "https://drive.google.com/file/d/1C4CUrhYMNVZua-MunNgDFbizxRvZVygS/view?usp=drive_link",
+            28: "https://drive.google.com/file/d/1wd78vO6TfHgFl8jY2I-LyDfMi7pkrjvV/view?usp=drive_link",
+            29: "https://drive.google.com/file/d/1fsqPp81YVMKtZDTSgjr6iCkAZslW36Ch/view?usp=drive_link",
+            30: "https://drive.google.com/file/d/1fc4eNsQqBsja50HAtSKS4kefnoBbgOfG/view?usp=drive_link",
+            31: "https://drive.google.com/file/d/195HI69GNeyvw4A45QXnNpd66BqRBnu5N/view?usp=drive_link",
+            32: "https://drive.google.com/file/d/1sDTSpyeBw_T2gyIKaZKSTmZUGcxtafBf/view?usp=drive_link",
+            33: "https://drive.google.com/file/d/1yqZtxTCemBHqnLgYklPjfLGvrN-yXrb2/view?usp=drive_link",
+            34: "https://drive.google.com/file/d/1bek5TTIj6yCxCTO6DqcDwmLATUjfHE9O/view?usp=drive_link",
+            35: "https://drive.google.com/file/d/1u5KPa1J0J7aEOa6sL4DkJn3baoBXFR9m/view?usp=drive_link",
+            36: "https://drive.google.com/file/d/1glssgn8oyWSVg0TV5kaRH8oWywKhCZd4/view?usp=drive_link"
+        };
+
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', function() {
+            createRankingCards();
+            initLoader();
+            initCursor();
+            initChart();
+            initScrollEffects();
+            initPodiumInteraction();
+        });
+
+        // Elegant Loader
+        function initLoader() {
+            const progressBar = document.querySelector('.progress-bar');
+            const loader = document.querySelector('.loader');
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 8 + 2;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        gsap.to(loader, {
+                            opacity: 0,
+                            duration: 1,
+                            ease: "power2.out",
+                            onComplete: () => {
+                                loader.style.display = 'none';
+                                initAnimations();
+                            }
+                        });
+                    }, 1000);
+                }
+                progressBar.style.width = progress + '%';
+            }, 100);
+        }
+
+        // Custom Cursor
+        function initCursor() {
+            const cursor = document.querySelector('.cursor');
+            
+            document.addEventListener('mousemove', (e) => {
+                gsap.to(cursor, {
+                    x: e.clientX - 10,
+                    y: e.clientY - 10,
+                    duration: 0.1,
+                    ease: "power2.out"
+                });
+            });
+
+            document.querySelectorAll('.rank-card, .podium, .scroll-indicator, .nav-btn').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+            });
+        }
+
+
+
+        // Create Ranking Cards - ALL TEAMS
+        function createRankingCards() {
+            const grid = document.getElementById('rankings-grid');
+            if (!grid) return;
+            
+            grid.innerHTML = '';
+            
+            teamsData.forEach(team => {
+                const card = document.createElement('div');
+                card.className = 'rank-card';
+                card.innerHTML = `
+                    <div class="rank-header">
+                        <div class="rank-position">#${team.rank}</div>
+                    </div>
+                    <div class="card-team-name">${team.name}</div>
+                    <div class="card-team-number">Team #${team.number}</div>
+                    <div class="score-container">
+                        <div class="score-bar">
+                            <div class="score-fill" data-score="${team.score}"></div>
+                        </div>
+                        <div class="score-value">${team.score.toFixed(1)} pts</div>
+                    </div>
+                `;
+
+                let nameRevealed = false;
+                card.addEventListener('click', () => {
+                    const teamName = card.querySelector('.card-team-name');
+                    if (!nameRevealed) {
+                        teamName.classList.add('revealed');
+                        nameRevealed = true;
+                    } else {
+                        window.open(pdfLinks[team.rank], '_blank');
+                    }
+                });
+
+                grid.appendChild(card);
+            });
+        }
+
+        // Initialize Chart
+        function initChart() {
+            const ctx = document.getElementById('performance-chart').getContext('2d');
+            
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: teamsData.map(team => `Team ${team.number}`),
+                    datasets: [{
+                        label: 'Score',
+                        data: teamsData.map(team => team.score),
+                        backgroundColor: 'rgba(212, 175, 55, 0.6)',
+                        borderColor: 'rgba(212, 175, 55, 1)',
+                        borderWidth: 1,
+                        borderRadius: 4,
+                        borderSkipped: false,
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            backgroundColor: 'rgba(11, 11, 15, 0.95)',
+                            titleColor: '#D4AF37',
+                            bodyColor: '#F8F9FA',
+                            borderColor: '#D4AF37',
+                            borderWidth: 1,
+                            cornerRadius: 8,
+                            callbacks: {
+                                title: function(context) {
+                                    const team = teamsData[context[0].dataIndex];
+                                    return team.name;
+                                },
+                                label: function(context) {
+                                    const team = teamsData[context.dataIndex];
+                                    return [
+                                        `Team: ${team.number}`,
+                                        `Score: ${team.score}`,
+                                        `Rank: ${team.rank}`
+                                    ];
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { 
+                                color: 'rgba(255, 255, 255, 0.1)',
+                                lineWidth: 1
+                            },
+                            ticks: { 
+                                color: 'rgba(255, 255, 255, 0.8)',
+                                font: { size: 12 }
+                            }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { 
+                                color: 'rgba(255, 255, 255, 0.8)',
+                                maxRotation: 45,
+                                font: { size: 10 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize Animations
+        function initAnimations() {
+            gsap.registerPlugin(ScrollTrigger);
+
+            gsap.from('.section-title', {
+                y: 60,
+                opacity: 0,
+                duration: 1,
+                stagger: 0.2,
+                ease: "power2.out",
+                scrollTrigger: {
+                    trigger: '.section-title',
+                    start: 'top 80%'
+                }
+            });
+
+            // Podiums are now visible by default
+
+            // Cards are now visible by default
+
+            // Animate score bars
+            document.querySelectorAll('.score-fill').forEach(bar => {
+                gsap.to(bar, {
+                    width: (bar.dataset.score / 100) * 100 + '%',
+                    duration: 1.5,
+                    ease: 'power2.out',
+                    scrollTrigger: {
+                        trigger: bar,
+                        start: 'top 90%'
+                    }
+                });
+            });
+        }
+
+        // Scroll Effects
+        function initScrollEffects() {
+            document.querySelector('.scroll-indicator').addEventListener('click', () => {
+                gsap.to(window, {
+                    scrollTo: window.innerHeight,
+                    duration: 1.5,
+                    ease: "power2.inOut"
+                });
+            });
+        }
+
+        // Podium Interaction
+        function initPodiumInteraction() {
+            document.querySelectorAll('.podium').forEach(podium => {
+                let nameRevealed = false;
+                const teamName = podium.querySelector('.team-name');
+                
+                podium.addEventListener('click', () => {
+                    if (!nameRevealed) {
+                        teamName.classList.add('revealed');
+                        nameRevealed = true;
+                    } else {
+                        const rank = podium.dataset.rank;
+                        window.open(pdfLinks[rank], '_blank');
+                    }
+                });
+            });
+        }
+    </script>
+</body>
+</html>

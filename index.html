@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bizcom'26 - Login</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Uncial+Antiqua&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/samarkan" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/trajan-pro-3" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-gold: #C9A96E;
+            --accent-blue: #6B73FF;
+            --deep-black: #0A0A0A;
+            --dark-navy: #111111;
+            --midnight: #1A1A1A;
+            --soft-white: #FAFAFA;
+            --glass-white: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: url('https://allegiance-educare.in/storage/uploads/colleges/1652790121Aerial%20View.JPG') center/cover no-repeat fixed;
+            color: var(--soft-white);
+            overflow-x: hidden;
+            cursor: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIiIGhlaWdodD0iMzIiIHZpZXdCb3g9IjAgMCAzMiAzMiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGVsbGlwc2UgY3g9IjE2IiBjeT0iMjAiIHJ4PSI4IiByeT0iMTAiIGZpbGw9IiMwMDAwMDAiLz4KPGVsbGlwc2UgY3g9IjE2IiBjeT0iMTgiIHJ4PSI2IiByeT0iOCIgZmlsbD0iI0ZGRkZGRiIvPgo8Y2lyY2xlIGN4PSIxNCIgY3k9IjE0IiByPSIxLjUiIGZpbGw9IiMwMDAwMDAiLz4KPGNpcmNsZSBjeD0iMTgiIGN5PSIxNCIgcj0iMS41IiBmaWxsPSIjMDAwMDAwIi8+Cjxwb2x5Z29uIHBvaW50cz0iMTYsMTYgMTQsMTggMTgsMTgiIGZpbGw9IiNGRkE1MDAiLz4KPC9zdmc+') 16 16, auto;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1;
+        }
+
+
+
+
+
+
+
+        /* Elegant Loader */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--deep-black);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .loader-content {
+            text-align: center;
+        }
+
+        .loader-title {
+            font-family: 'Trajan Pro 3', 'Samarkan', 'Cinzel Decorative', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: 0.25em;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.5s forwards;
+            background: linear-gradient(135deg, #B8860B 0%, #DAA520 25%, #FFD700 50%, #DAA520 75%, #B8860B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(255, 215, 0, 0.6);
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.4));
+        }
+
+        .loader-subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease 1s forwards;
+            letter-spacing: 0.1em;
+        }
+
+        .progress-container {
+            width: 400px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 1px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary-gold), var(--accent-blue));
+            transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 20px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6));
+            animation: shimmer 1s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-20px); }
+            100% { transform: translateX(20px); }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+        }
+
+        .hero-title {
+            font-family: 'Trajan Pro 3', 'Cinzel Decorative', serif;
+            font-size: 8rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.3em;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: heroEnter 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 2s forwards;
+            background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 30%, #D4AF37 70%, #FFD700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+            filter: drop-shadow(0 0 30px rgba(59, 130, 246, 0.4));
+        }
+
+
+
+        /* Transparent Navigation */
+        .navbar {
+            position: absolute;
+            top: 2rem;
+            left: 3rem;
+            right: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            animation: fadeIn 1s ease 2s forwards;
+        }
+
+        .nav-left, .nav-right {
+            display: flex;
+            gap: 2rem;
+            flex: 1;
+        }
+
+        .nav-right {
+            justify-content: flex-end;
+        }
+
+        .nav-logos {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            align-items: center;
+            flex: 2;
+        }
+
+        .nav-logo {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-logo:hover {
+            transform: scale(1.1);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 0.5rem 0;
+            font-family: serif;
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            color: var(--primary-gold);
+        }
+
+        .hero-teaser {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #B8860B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: heroEnter 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.5s forwards;
+            position: relative;
+        }
+
+        .hero-teaser::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary-gold), transparent);
+        }
+
+        @keyframes heroEnter {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Login Button */
+        .login-container {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: heroEnter 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 3s forwards;
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .login-button {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 60px;
+            padding: 1.2rem 2.5rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            font-weight: 500;
+            color: var(--soft-white);
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            letter-spacing: 0.02em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            min-width: 280px;
+        }
+
+        .login-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(201, 169, 110, 0.1) 0%, rgba(107, 115, 255, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .login-button:hover::before {
+            opacity: 1;
+        }
+
+        .google-logo {
+            width: 20px;
+            height: 20px;
+            background: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTIyLjU2IDEyLjI1QzIyLjU2IDExLjQ3IDIyLjQ5IDEwLjcyIDIyLjM2IDEwSDE2VjE0LjI1SDIwLjA5QzE5Ljg5IDE1LjMgMTkuMjcgMTYuMTUgMTguMzggMTYuN1YxOS4ySDIwLjYxQzIxLjgxIDE4LjEgMjIuNTYgMTUuMzUgMjIuNTYgMTIuMjVaIiBmaWxsPSIjNDI4NUY0Ii8+CjxwYXRoIGQ9Ik0xNiAyMkMxOC40MyAyMiAyMC40NyAyMS4xOSAyMS45NiAxOS44NEwyMC4wOSAxNy4yNUMxOS4zOSAxNy44MSAxOC40MyAxOC4xNSAxNiAxOC4xNUMxMy42NSAxOC4xNSAxMS42NyAxNi44MSAxMC45NiAxNC45Mkg4LjU5VjE3LjU4QzEwLjA4IDE5LjkzIDEyLjg0IDIyIDE2IDIyWiIgZmlsbD0iIzM0QTg1MyIvPgo8cGF0aCBkPSJNMTAuOTYgMTQuOTJDMTAuNzYgMTQuMzIgMTAuNjUgMTMuNjggMTAuNjUgMTNDMTAuNjUgMTIuMzIgMTAuNzYgMTEuNjggMTAuOTYgMTEuMDhWOC41SDguNTlDNy45MSA5Ljg2IDcuNSAxMS4zOSA3LjUgMTNDNy41IDE0LjYxIDcuOTEgMTYuMTQgOC41OSAxNy41TDEwLjk2IDE0LjkyWiIgZmlsbD0iI0ZCQkMwNSIvPgo8cGF0aCBkPSJNMTYgNS44NUMxOC4yNyA1Ljg1IDIwLjI2IDYuNjYgMjEuODEgOC4wOUwyNC4yNyA1LjYzQzIxLjk2IDMuNTMgMTguOTggMi41IDE2IDIuNUMxMi44NCAyLjUgMTAuMDggNC41NyA4LjU5IDYuOTJMMTAuOTYgOS41QzExLjY3IDcuNjkgMTMuNjUgNS44NSAxNiA1Ljg1WiIgZmlsbD0iI0VBNDMzNSIvPgo8L3N2Zz4K') no-repeat center;
+            background-size: contain;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 4rem; }
+            .hero-subtitle { font-size: 1.4rem; }
+            .login-button { font-size: 1.1rem; padding: 1.2rem 2.5rem; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title { font-size: 3rem; }
+            .loader-title { font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <button class="nav-btn" onclick="window.open('https://hbs.edu.in', '_blank')">Institute</button>
+            <button class="nav-btn" onclick="window.location.href='archive.html'">Archive</button>
+        </div>
+        <div class="nav-logos">
+            <img src="https://jaipuriambaeduin6bc80.zapwp.com/q:i/r:0/wp:1/w:480/u:https://jaipuriamba.edu.in/wp-content/uploads/2022/02/iiclogo-1.png" alt="IIC Logo" class="nav-logo">
+            <img src="https://spcputtur.ac.in/img/containers/main/MoE-Logo.png/20187deb5f98ab67f8c5be8762cba7be.webp" alt="MoE Logo" class="nav-logo">
+            <img src="https://hbs.edu.in/images/logo.png" alt="HBS Logo" class="nav-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/en/e/eb/All_India_Council_for_Technical_Education_logo.png" alt="AICTE Logo" class="nav-logo">
+            <img src="https://i.ibb.co/Xr7D3Vny/image-2.png" alt="Ministry of Education Logo" class="nav-logo">
+        </div>
+        <div class="nav-right">
+            <button class="nav-btn" onclick="window.location.href='team.html'">Team</button>
+            <button class="nav-btn" onclick="window.location.href='president.html'">President</button>
+        </div>
+    </nav>
+
+
+
+    <!-- Elegant Loader -->
+    <div class="loader">
+        <div class="loader-content">
+            <div class="loader-title">BIZCOM'26</div>
+            <div class="loader-subtitle">Where Innovation Speaks Business</div>
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-teaser">IIC-HBS presents</div>
+            <h1 class="hero-title">BIZCOM'26</h1>
+            <div class="login-container">
+                <button class="login-button" onclick="handleGoogleLogin()">
+                    <div class="google-logo"></div>
+                    Continue with Google
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <script type="module">
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', function() {
+            initLoader();
+        });
+
+        // Elegant Loader
+        function initLoader() {
+            const progressBar = document.querySelector('.progress-bar');
+            const loader = document.querySelector('.loader');
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 8 + 2;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        gsap.to(loader, {
+                            opacity: 0,
+                            duration: 1,
+                            ease: "power2.out",
+                            onComplete: () => {
+                                loader.style.display = 'none';
+                            }
+                        });
+                    }, 1000);
+                }
+                progressBar.style.width = progress + '%';
+            }, 100);
+        }
+
+
+
+
+
+        // Firebase imports and configuration
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAKmTuBeqneZyMrni9aKwLkXRBB018K2cI",
+            authDomain: "bizcom-39d83.firebaseapp.com",
+            projectId: "bizcom-39d83",
+            storageBucket: "bizcom-39d83.firebasestorage.app",
+            messagingSenderId: "514070473542",
+            appId: "1:514070473542:web:09016635c87fa2a672d347",
+            measurementId: "G-76S9PN60B7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        // Google Login Handler
+        async function handleGoogleLogin() {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                console.log('User signed in:', result.user);
+                window.location.href = 'dashboard.html';
+            } catch (error) {
+                console.error('Sign in error:', error);
+                alert('Login failed. Please try again.');
+            }
+        }
+
+        // Auth state listener
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log('User is signed in:', user);
+            }
+        });
+
+
+
+        // Make function global
+        window.handleGoogleLogin = handleGoogleLogin;
+    </script>
+</body>
+</html>

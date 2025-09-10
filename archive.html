@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bizcom'26 - Archive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gold: #C9A96E;
+            --accent-blue: #6B73FF;
+            --deep-black: #0A0A0A;
+            --soft-white: #FAFAFA;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(ellipse at center, #0B0B0F 0%, #000000 100%);
+            color: var(--soft-white);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: absolute;
+            top: 2rem;
+            left: 3rem;
+            right: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .nav-left, .nav-right {
+            display: flex;
+            gap: 2rem;
+            flex: 1;
+        }
+
+        .nav-right {
+            justify-content: flex-end;
+        }
+
+        .nav-logos {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            align-items: center;
+            flex: 2;
+        }
+
+        .nav-logo {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-logo:hover {
+            transform: scale(1.1);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 0.5rem 0;
+            font-family: serif;
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            color: var(--primary-gold);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 70vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            padding-bottom: 2rem;
+        }
+
+        .hero-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #B8860B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-subtitle {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 3rem;
+        }
+
+        /* Clean Gallery Grid */
+        .gallery-section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .photo-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: transform 0.3s ease;
+            text-align: center;
+        }
+
+        .photo-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .photo-placeholder {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, rgba(201, 169, 110, 0.2), rgba(107, 115, 255, 0.2));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .photo-title {
+            font-family: 'Cinzel Decorative', serif;
+            color: var(--primary-gold);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .photo-desc {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        /* Scrolling Photo Strip */
+        .photo-strip {
+            width: 100%;
+            overflow: hidden;
+            padding: 0.5rem 0;
+            margin: 0.5rem 0;
+        }
+
+        .photo-scroll {
+            display: flex;
+            gap: 0.5rem;
+            animation: scrollRight 30s linear infinite;
+        }
+
+        .scroll-photo {
+            min-width: 250px;
+            height: 150px;
+            background: linear-gradient(135deg, rgba(201, 169, 110, 0.3), rgba(107, 115, 255, 0.3));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes scrollRight {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+
+        /* Content Section */
+        .content {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .section-title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2.5rem;
+            color: var(--primary-gold);
+            margin-bottom: 2rem;
+        }
+
+        .edition-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .edition-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .edition-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .edition-year {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.8rem;
+            color: var(--accent-blue);
+            margin-bottom: 1rem;
+        }
+
+        .edition-desc {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+        }
+
+        @media (max-width: 768px) {
+            .hero-title {
+                font-size: 2.5rem;
+            }
+            .photo-placeholder {
+                width: 150px;
+                height: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <button class="nav-btn" onclick="window.open('https://hbs.edu.in', '_blank')">Institute</button>
+            <button class="nav-btn" onclick="history.back()">Archive</button>
+        </div>
+        <div class="nav-logos">
+            <img src="https://jaipuriambaeduin6bc80.zapwp.com/q:i/r:0/wp:1/w:480/u:https://jaipuriamba.edu.in/wp-content/uploads/2022/02/iiclogo-1.png" alt="IIC Logo" class="nav-logo">
+            <img src="https://spcputtur.ac.in/img/containers/main/MoE-Logo.png/20187deb5f98ab67f8c5be8762cba7be.webp" alt="MoE Logo" class="nav-logo">
+            <img src="https://hbs.edu.in/images/logo.png" alt="HBS Logo" class="nav-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/en/e/eb/All_India_Council_for_Technical_Education_logo.png" alt="AICTE Logo" class="nav-logo">
+            <img src="https://i.ibb.co/Xr7D3Vny/image-2.png" alt="Ministry of Education Logo" class="nav-logo">
+        </div>
+        <div class="nav-right">
+            <button class="nav-btn" onclick="window.location.href='team.html'">Team</button>
+            <button class="nav-btn" onclick="window.location.href='president.html'">President</button>
+        </div>
+    </nav>
+
+
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1 class="hero-title">BIZCOM Archive</h1>
+        <p class="hero-subtitle">Journey Through Innovation & Excellence</p>
+    </section>
+
+    <!-- Scrolling Photo Strip -->
+    <div class="photo-strip">
+        <div class="photo-scroll">
+            <div class="scroll-photo">BIZCOM'25<br>Opening Ceremony</div>
+            <div class="scroll-photo">BIZCOM'24<br>Winner Announcement</div>
+            <div class="scroll-photo">BIZCOM'23<br>Pitch Presentations</div>
+        </div>
+    </div>
+
+    <!-- Gallery Section -->
+    <section class="gallery-section">
+        <h2 class="section-title">Memorable Moments</h2>
+        <div class="gallery-grid">
+            <div class="photo-card">
+                <div class="photo-placeholder">Photo Placeholder</div>
+                <div class="photo-title">BIZCOM'25 Opening</div>
+                <div class="photo-desc">Grand opening ceremony with 45+ teams</div>
+            </div>
+            <div class="photo-card">
+                <div class="photo-placeholder">Photo Placeholder</div>
+                <div class="photo-title">Winner Announcement</div>
+                <div class="photo-desc">Celebrating the champions of innovation</div>
+            </div>
+            <div class="photo-card">
+                <div class="photo-placeholder">Photo Placeholder</div>
+                <div class="photo-title">Pitch Presentations</div>
+                <div class="photo-desc">Teams presenting their breakthrough ideas</div>
+            </div>
+            <div class="photo-card">
+                <div class="photo-placeholder">Photo Placeholder</div>
+                <div class="photo-title">Networking Session</div>
+                <div class="photo-desc">Entrepreneurs connecting and collaborating</div>
+            </div>
+            <div class="photo-card">
+                <div class="photo-placeholder">Photo Placeholder</div>
+                <div class="photo-title">Judges Panel</div>
+                <div class="photo-desc">Industry experts evaluating innovations</div>
+            </div>
+            <div class="photo-card">
+                <div class="photo-placeholder">Photo Placeholder</div>
+                <div class="photo-title">Innovation Showcase</div>
+                <div class="photo-desc">Displaying cutting-edge solutions</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Previous Editions -->
+    <section class="content">
+        <h2 class="section-title">Previous Editions</h2>
+        <div class="edition-grid">
+            <div class="edition-card">
+                <div class="edition-year">BIZCOM'25</div>
+                <p class="edition-desc">The most successful edition with 45+ participating teams, featuring groundbreaking innovations in AI, sustainability, and fintech solutions.</p>
+            </div>
+            <div class="edition-card">
+                <div class="edition-year">BIZCOM'24</div>
+                <p class="edition-desc">A remarkable showcase of entrepreneurial talent with focus on social impact startups and digital transformation initiatives.</p>
+            </div>
+            <div class="edition-card">
+                <div class="edition-year">BIZCOM'23</div>
+                <p class="edition-desc">The foundation year that established BIZCOM as the premier business competition platform for emerging entrepreneurs.</p>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

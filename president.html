@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bizcom'26 - President</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gold: #C9A96E;
+            --accent-blue: #6B73FF;
+            --deep-black: #0A0A0A;
+            --soft-white: #FAFAFA;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(ellipse at center, #0B0B0F 0%, #000000 100%);
+            color: var(--soft-white);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 4rem 3rem;
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+        }
+
+        .institution-logos {
+            position: absolute;
+            left: 2rem;
+            top: 2rem;
+            display: flex;
+            flex-direction: row;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            object-fit: contain;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .logo:nth-child(2) {
+            filter: brightness(1.5);
+        }
+
+        .logo:hover {
+            opacity: 1;
+        }
+
+        .president-avatar {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            border: 4px solid var(--primary-gold);
+            box-shadow: 0 15px 35px rgba(201, 169, 110, 0.3);
+            object-fit: cover;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .president-avatar:hover {
+            transform: scale(1.05);
+        }
+
+        .credentials {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .credential-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .credential-item:last-child {
+            border-bottom: none;
+        }
+
+        .credential-label {
+            font-weight: 600;
+            color: var(--primary-gold);
+            font-size: 0.9rem;
+        }
+
+        .credential-value {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            text-align: right;
+        }
+
+        .achievements {
+            background: rgba(107, 115, 255, 0.05);
+            border: 1px solid rgba(107, 115, 255, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            text-align: left;
+        }
+
+        .achievements h3 {
+            color: var(--accent-blue);
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            font-family: 'Cinzel Decorative', serif;
+        }
+
+        .achievement-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .achievement-list li {
+            padding: 0.5rem 0;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            line-height: 1.4;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+
+        .achievement-list li::before {
+            content: '▸';
+            color: var(--accent-blue);
+            position: absolute;
+            left: 0;
+        }
+
+        .title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #B8860B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .name {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--soft-white);
+            margin-bottom: 0.5rem;
+        }
+
+        .position {
+            font-size: 1.1rem;
+            color: var(--primary-gold);
+            margin-bottom: 2rem;
+            font-weight: 500;
+        }
+
+        .message {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 3rem;
+            font-style: italic;
+        }
+
+        .back-button {
+            background: linear-gradient(135deg, var(--primary-gold), #FFD700);
+            border: none;
+            color: var(--deep-black);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .back-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(201, 169, 110, 0.3);
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 2rem;
+            }
+            .container {
+                padding: 2rem;
+            }
+            .institution-logos {
+                position: static;
+                transform: none;
+                flex-direction: row;
+                justify-content: center;
+                margin-bottom: 2rem;
+            }
+            .logo {
+                width: 50px;
+                height: 50px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="institution-logos">
+            <img src="https://hbs.edu.in/images/logo.png" alt="HBS Logo" class="logo">
+            <img src="https://jaipuriambaeduin6bc80.zapwp.com/q:i/r:0/wp:1/w:480/u:https://jaipuriamba.edu.in/wp-content/uploads/2022/02/iiclogo-1.png" alt="IIC Logo" class="logo">
+        </div>
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTs1toCjazlMxj2m6UkA6m5WLK4A6QEa7rNkA&s" alt="Dr. Rimu Chaudhuri" class="president-avatar" onclick="window.open('https://www.linkedin.com/in/dr-rimu-chaudhuri-60126021', '_blank')">
+        <h1 class="title">President</h1>
+        <div class="name">Dr. Rimu Chaudhuri</div>
+        <div class="position">Associate Professor of Economics, Heritage Business School</div>
+        
+        <div class="credentials">
+            <div class="credential-item">
+                <span class="credential-label">Institution</span>
+                <span class="credential-value">Heritage Business School, Kolkata</span>
+            </div>
+            <div class="credential-item">
+                <span class="credential-label">Role</span>
+                <span class="credential-value">President, Institute Innovation Council</span>
+            </div>
+            <div class="credential-item">
+                <span class="credential-label">Education</span>
+                <span class="credential-value">Ph.D., M.A., B.A. (Hons.) - University of Burdwan</span>
+            </div>
+            <div class="credential-item">
+                <span class="credential-label">Specialization</span>
+                <span class="credential-value">Agricultural Economics, Entrepreneurship Development</span>
+            </div>
+            <div class="credential-item">
+                <span class="credential-label">Contact</span>
+                <span class="credential-value">iic@hbs.edu.in</span>
+            </div>
+        </div>
+
+        <div class="achievements">
+            <h3>Under Her Leadership at HBS IIC</h3>
+            <ul class="achievement-list">
+                <li>Successfully organized BIZCOM'26 - Premier Business Competition</li>
+                <li>Mentored 36+ innovative startup teams across diverse sectors</li>
+                <li>Established comprehensive entrepreneurship training programs</li>
+                <li>Built strategic partnerships with industry leaders and investors</li>
+                <li>Created platform for student innovation and business development</li>
+                <li>Fostered culture of entrepreneurial thinking and practical application</li>
+            </ul>
+        </div>
+        
+        <p class="message">
+            "Innovation distinguishes between a leader and a follower. At BIZCOM'26, we nurture the entrepreneurial spirit that transforms academic knowledge into real-world solutions, fostering the next generation of business leaders."
+        </p>
+        
+        <button class="back-button" onclick="history.back()">
+            Back to Dashboard
+        </button>
+    </div>
+</body>
+</html>

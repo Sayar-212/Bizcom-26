@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bizcom'26 - Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gold: #C9A96E;
+            --accent-blue: #6B73FF;
+            --deep-black: #0A0A0A;
+            --soft-white: #FAFAFA;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(ellipse at center, #0B0B0F 0%, #000000 100%);
+            color: var(--soft-white);
+            min-height: 100vh;
+        }
+
+        /* User Profile */
+        .user-profile {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            z-index: 1000;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 2px solid var(--primary-gold);
+        }
+
+        .user-name {
+            font-weight: 500;
+            color: var(--soft-white);
+        }
+
+        /* Main Container */
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .title {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 3rem;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #B8860B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+
+        /* Caskets Container */
+        .caskets-container {
+            display: flex;
+            gap: 3rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .casket {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            width: 300px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .casket::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(201, 169, 110, 0.1) 0%, rgba(107, 115, 255, 0.1) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .casket:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-gold);
+        }
+
+        .casket:hover::before {
+            opacity: 1;
+        }
+
+        .casket-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .casket h3 {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--primary-gold);
+        }
+
+        .casket p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+        }
+
+        .status-tag {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 0.25rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .urgent {
+            background: #ff4757;
+            color: white;
+        }
+
+        .coming-soon {
+            background: rgba(107, 115, 255, 0.15);
+            color: var(--accent-blue);
+            border: 1px solid rgba(107, 115, 255, 0.3);
+        }
+
+        .deadline {
+            font-size: 0.8rem;
+            color: #ff6b6b;
+            margin-top: 0.8rem;
+            font-weight: 500;
+        }
+
+        /* Popup Styles */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .popup {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: var(--soft-white);
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .popup-close:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--primary-gold);
+        }
+
+        .popup-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .popup h3 {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2rem;
+            color: var(--primary-gold);
+            margin-bottom: 1rem;
+        }
+
+        .popup p {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        .popup-button {
+            background: linear-gradient(135deg, var(--primary-gold), #FFD700);
+            border: none;
+            color: var(--deep-black);
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .popup-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(201, 169, 110, 0.3);
+        }
+
+        .popup-button:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.5);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        @media (max-width: 768px) {
+            .caskets-container {
+                flex-direction: column;
+                align-items: center;
+            }
+            .title {
+                font-size: 2rem;
+            }
+            .popup {
+                padding: 2rem;
+                margin: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- User Profile -->
+    <div class="user-profile">
+        <img id="userAvatar" class="user-avatar" src="" alt="User Avatar">
+        <span id="userName" class="user-name"></span>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <h1 class="title">BIZCOM'26 Dashboard</h1>
+        
+        <div class="caskets-container">
+            <!-- Submit Idea Casket -->
+            <div class="casket" onclick="navigateTo('form.html')">
+                <div class="status-tag urgent">Urgent</div>
+                <span class="casket-icon">💡</span>
+                <h3>Submit Idea</h3>
+                <p>Share your innovative business ideas and solutions for the competition</p>
+                <div class="deadline">Module closing on 15th December</div>
+            </div>
+
+            <!-- Initial Results Casket -->
+            <div class="casket" onclick="navigateTo('popup.html?type=initial')">
+                <div class="status-tag coming-soon">Coming Soon</div>
+                <span class="casket-icon">📊</span>
+                <h3>Initial Results</h3>
+                <p>View preliminary evaluation results and feedback on submissions</p>
+            </div>
+
+            <!-- Final Results Casket -->
+            <div class="casket" onclick="navigateTo('popup.html?type=final')">
+                <div class="status-tag coming-soon">TBD</div>
+                <span class="casket-icon">🏆</span>
+                <h3>Final Results</h3>
+                <p>Check final competition results and winner announcements</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Popup Overlay -->
+    <div id="popup-overlay" class="popup-overlay" onclick="hidePopup()">
+        <div id="popup" class="popup" onclick="event.stopPropagation()" style="transform: scale(0.9); transition: all 0.3s ease;">
+            <button class="popup-close" onclick="hidePopup()">&times;</button>
+            <div id="popup-icon" class="popup-icon"></div>
+            <h3 id="popup-title"></h3>
+            <p id="popup-message"></p>
+            <button id="popup-button" class="popup-button"></button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, collection, onSnapshot, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAKmTuBeqneZyMrni9aKwLkXRBB018K2cI",
+            authDomain: "bizcom-39d83.firebaseapp.com",
+            projectId: "bizcom-39d83",
+            storageBucket: "bizcom-39d83.firebasestorage.app",
+            messagingSenderId: "514070473542",
+            appId: "1:514070473542:web:09016635c87fa2a672d347",
+            measurementId: "G-76S9PN60B7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('userName').textContent = user.displayName || 'User';
+                document.getElementById('userAvatar').src = user.photoURL || 'https://via.placeholder.com/50';
+                
+                const q = query(collection(db, 'ideas'), orderBy('timestamp', 'desc'));
+                onSnapshot(q, (snapshot) => {
+                    console.log(`Ideas updated: ${snapshot.size} total`);
+                });
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+
+        window.navigateTo = navigateTo;
+    </script>
+</body>
+</html>

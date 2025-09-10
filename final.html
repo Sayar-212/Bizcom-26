@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bizcom'26 - Final Results</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Uncial+Antiqua&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/samarkan" rel="stylesheet">
+    <link href="https://fonts.cdnfonts.com/css/trajan-pro-3" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-gold: #D4AF37;
+            --accent-purple: #8B5CF6;
+            --deep-black: #000000;
+            --dark-navy: #0B0B0F;
+            --midnight: #1A1A1E;
+            --soft-white: #F8F9FA;
+            --glass-white: rgba(255, 255, 255, 0.08);
+            --glass-border: rgba(255, 255, 255, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(ellipse at center, #0B0B0F 0%, #000000 100%);
+            color: var(--soft-white);
+            overflow-x: hidden;
+            cursor: none;
+            min-height: 100vh;
+            position: relative;
+        }
+
+
+
+        /* Custom Cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary-gold);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            mix-blend-mode: difference;
+            transition: all 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            backdrop-filter: blur(2px);
+        }
+
+        .cursor.hover {
+            transform: scale(2.5);
+            border-color: var(--accent-purple);
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        /* Elegant Loader */
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: var(--deep-black);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .loader-content {
+            text-align: center;
+        }
+
+        .loader-title {
+            font-family: 'Trajan Pro 3', 'Samarkan', 'Cinzel Decorative', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            letter-spacing: 0.25em;
+            opacity: 0;
+            animation: fadeInUp 1s ease 0.5s forwards;
+            background: linear-gradient(135deg, #8B5CF6 0%, #A855F7 25%, #C084FC 50%, #A855F7 75%, #8B5CF6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(139, 92, 246, 0.6);
+            filter: drop-shadow(0 0 20px rgba(139, 92, 246, 0.4));
+        }
+
+        .loader-subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeInUp 1s ease 1s forwards;
+            letter-spacing: 0.1em;
+        }
+
+        .progress-container {
+            width: 400px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 1px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--primary-gold), var(--accent-purple));
+            transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            text-align: center;
+            z-index: 2;
+            margin-top: 8rem;
+        }
+
+        .hero-title {
+            font-family: 'Trajan Pro 3', 'Cinzel Decorative', serif;
+            font-size: 8rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            letter-spacing: 0.3em;
+            opacity: 0;
+            transform: translateY(50px);
+            animation: heroEnter 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 2s forwards;
+            background: linear-gradient(135deg, #1E3A8A 0%, #3B82F6 30%, #D4AF37 70%, #FFD700 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none;
+            filter: drop-shadow(0 0 30px rgba(59, 130, 246, 0.4));
+        }
+
+        .hero-subtitle {
+            font-family: 'Samarkan', 'Trajan Pro 3', 'Cinzel Decorative', serif;
+            font-size: 2.2rem;
+            font-weight: 400;
+            margin-bottom: 3rem;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: heroEnter 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 2.5s forwards;
+            letter-spacing: 0.15em;
+            background: linear-gradient(135deg, #FFFFFF 0%, #8B5CF6 50%, #6366F1 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Transparent Navigation */
+        .navbar {
+            position: absolute;
+            top: 2rem;
+            left: 3rem;
+            right: 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            animation: fadeIn 1s ease 2s forwards;
+        }
+
+        .nav-left, .nav-right {
+            display: flex;
+            gap: 2rem;
+            flex: 1;
+        }
+
+        .nav-right {
+            justify-content: flex-end;
+        }
+
+        .nav-logos {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            align-items: center;
+            flex: 2;
+        }
+
+        .nav-logo {
+            width: 70px;
+            height: 70px;
+            object-fit: contain;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-logo:hover {
+            transform: scale(1.1);
+        }
+
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.6);
+            padding: 0.5rem 0;
+            font-family: serif;
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            color: var(--primary-gold);
+        }
+
+        .hero-teaser {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1rem;
+            font-weight: 500;
+            background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #B8860B 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: heroEnter 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 1.5s forwards;
+            position: relative;
+        }
+
+        .hero-teaser::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--primary-gold), transparent);
+        }
+
+        @keyframes heroEnter {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 60px;
+            background: linear-gradient(to bottom, var(--accent-purple), transparent);
+            cursor: pointer;
+            opacity: 0;
+            animation: fadeIn 1s ease 3.5s forwards;
+        }
+
+        .scroll-indicator::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background: var(--accent-purple);
+            border-radius: 50%;
+            animation: scrollDot 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollDot {
+            0%, 100% { transform: translateX(-50%) translateY(0); opacity: 1; }
+            50% { transform: translateX(-50%) translateY(40px); opacity: 0.3; }
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Glass Morphism Sections */
+        .section {
+            padding: 8rem 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .glass-container {
+            background: var(--glass-white);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 4rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glass-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--accent-purple), transparent);
+        }
+
+        .section-title {
+            font-family: serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 4rem;
+            position: relative;
+            letter-spacing: 0.2em;
+            background: linear-gradient(135deg, #8B5CF6 0%, #A855F7 25%, #D4AF37 50%, #FFD700 75%, #8B5CF6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 40px rgba(139, 92, 246, 0.5);
+            filter: drop-shadow(0 0 15px rgba(139, 92, 246, 0.3));
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 2px;
+            background: var(--accent-purple);
+        }
+
+        /* Professional Winners Display */
+        .victory-quote {
+            text-align: center;
+            margin: 3rem auto 0;
+            max-width: 600px;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: heroEnter 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) 3s forwards;
+        }
+
+        .victory-quote blockquote {
+            font-family: 'Cinzel', serif;
+            font-size: 1.8rem;
+            font-style: italic;
+            color: var(--primary-gold);
+            margin-bottom: 1rem;
+            line-height: 1.4;
+            position: relative;
+        }
+
+        .victory-quote blockquote::before {
+            content: '"';
+            font-size: 4rem;
+            color: rgba(212,175,55,0.3);
+            position: absolute;
+            left: -2rem;
+            top: -1rem;
+        }
+
+        .victory-quote cite {
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            color: rgba(255,255,255,0.6);
+            font-style: normal;
+            letter-spacing: 0.05em;
+        }
+
+        .winners-showcase {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 1fr;
+            gap: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            align-items: end;
+        }
+
+        .winner-card {
+            background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(255,255,255,0.02));
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            position: relative;
+            transition: transform 0.3s ease;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .winner-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .champion {
+            order: 2;
+            border: 2px solid rgba(212,175,55,0.6);
+            box-shadow: 0 0 40px rgba(212,175,55,0.2), 0 20px 40px rgba(0,0,0,0.3);
+            transform: scale(1.05);
+        }
+
+        .runner-up-2 {
+            order: 1;
+            border: 2px solid rgba(192,192,192,0.6);
+            box-shadow: 0 0 30px rgba(192,192,192,0.15), 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .runner-up-3 {
+            order: 3;
+            border: 2px solid rgba(205,127,50,0.6);
+            box-shadow: 0 0 30px rgba(205,127,50,0.15), 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .rank-indicator {
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #000;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+
+        .champion .rank-indicator {
+            background: linear-gradient(135deg, #D4AF37, #FFD700);
+            width: 60px;
+            height: 60px;
+            font-size: 1.4rem;
+        }
+
+        .runner-up-2 .rank-indicator {
+            background: linear-gradient(135deg, #E5E5E5, #C0C0C0);
+        }
+
+        .runner-up-3 .rank-indicator {
+            background: linear-gradient(135deg, #DEB887, #CD7F32);
+        }
+
+        .winner-profile {
+            margin: 2rem 0;
+        }
+
+        .profile-initial {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #1E3A8A, #3B82F6);
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Cinzel', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: white;
+            box-shadow: 0 10px 25px rgba(30,58,138,0.3);
+        }
+
+        .champion .profile-initial {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #D4AF37, #FFD700);
+            color: #000;
+            font-size: 2.5rem;
+            box-shadow: 0 15px 35px rgba(212,175,55,0.4);
+        }
+
+        .winner-name {
+            font-family: 'Cinzel', serif;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--soft-white);
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.02em;
+        }
+
+        .champion .winner-name {
+            font-size: 1.8rem;
+            color: var(--primary-gold);
+            font-weight: 700;
+        }
+
+        .team-identifier {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 2rem;
+            font-weight: 400;
+        }
+
+        .performance-metrics {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .champion .performance-metrics {
+            background: rgba(212,175,55,0.08);
+            border: 1px solid rgba(212,175,55,0.2);
+        }
+
+        .final-score {
+            font-family: 'Inter', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #3B82F6;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .champion .final-score {
+            font-size: 2.8rem;
+            color: var(--primary-gold);
+        }
+
+        .score-label {
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 500;
+        }
+
+        .achievement-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.4rem 0.8rem;
+            background: rgba(59,130,246,0.15);
+            border: 1px solid rgba(59,130,246,0.3);
+            border-radius: 20px;
+            font-size: 0.75rem;
+            color: #3B82F6;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .champion .achievement-badge {
+            background: rgba(212,175,55,0.15);
+            border: 1px solid rgba(212,175,55,0.4);
+            color: var(--primary-gold);
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 6rem 2rem;
+            background: var(--glass-white);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid var(--glass-border);
+            margin-top: 4rem;
+        }
+
+        .footer h2 {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2.8rem;
+            font-weight: 900;
+            color: var(--primary-gold);
+            margin-bottom: 2rem;
+            letter-spacing: 0.1em;
+        }
+
+        .footer p {
+            font-family: 'Cinzel', serif;
+            font-size: 1.2rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.8);
+            max-width: 800px;
+            margin: 0 auto 1.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .copyright {
+            margin-top: 3rem;
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 4rem; }
+            .hero-subtitle { font-size: 1.4rem; }
+            .section-title { font-size: 2.5rem; }
+            .section { padding: 4rem 1rem; }
+            .glass-container { padding: 2rem; }
+            .winners-showcase {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                max-width: 400px;
+            }
+            .champion {
+                order: 1;
+                transform: none;
+            }
+            .runner-up-2 {
+                order: 2;
+            }
+            .runner-up-3 {
+                order: 3;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title { font-size: 3rem; }
+            .loader-title { font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-left">
+            <button class="nav-btn" onclick="window.open('https://hbs.edu.in', '_blank')">Institute</button>
+            <button class="nav-btn" onclick="window.location.href='archive.html'">Archive</button>
+        </div>
+        <div class="nav-logos">
+            <img src="https://jaipuriambaeduin6bc80.zapwp.com/q:i/r:0/wp:1/w:480/u:https://jaipuriamba.edu.in/wp-content/uploads/2022/02/iiclogo-1.png" alt="IIC Logo" class="nav-logo">
+            <img src="https://spcputtur.ac.in/img/containers/main/MoE-Logo.png/20187deb5f98ab67f8c5be8762cba7be.webp" alt="MoE Logo" class="nav-logo">
+            <img src="https://hbs.edu.in/images/logo.png" alt="HBS Logo" class="nav-logo">
+            <img src="https://upload.wikimedia.org/wikipedia/en/e/eb/All_India_Council_for_Technical_Education_logo.png" alt="AICTE Logo" class="nav-logo">
+            <img src="https://i.ibb.co/Xr7D3Vny/image-2.png" alt="Ministry of Education Logo" class="nav-logo">
+        </div>
+        <div class="nav-right">
+            <button class="nav-btn" onclick="window.location.href='team.html'">Team</button>
+            <button class="nav-btn" onclick="window.location.href='president.html'">President</button>
+        </div>
+    </nav>
+
+
+
+    <!-- Elegant Loader -->
+    <div class="loader">
+        <div class="loader-content">
+            <div class="loader-title">BIZCOM'26</div>
+            <div class="loader-subtitle">Where Innovation Meets Victory</div>
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-teaser">IIC-HBS presents</div>
+            <h1 class="hero-title">BIZCOM'26</h1>
+            <p class="hero-subtitle">Final Championship Results</p>
+            <div class="victory-quote">
+                <blockquote>
+                    "Success is not final, failure is not fatal: it is the courage to continue that counts."
+                </blockquote>
+                <cite>— Winston Churchill</cite>
+            </div>
+        </div>
+    </section>
+
+    <!-- Winners Podium -->
+    <section class="section">
+        <div class="glass-container">
+            <h2 class="section-title">CHAMPIONS</h2>
+            <div class="winners-showcase">
+                <div class="winner-card champion">
+                    <div class="achievement-badge">Champion</div>
+                    <div class="rank-indicator">1</div>
+                    <div class="winner-profile">
+                        <div class="profile-initial">T</div>
+                        <div class="winner-name">TBD</div>
+                        <div class="team-identifier">Team #TBD</div>
+                    </div>
+                    <div class="performance-metrics">
+                        <div class="final-score">TBD</div>
+                        <div class="score-label">Final Score</div>
+                    </div>
+                </div>
+                
+                <div class="winner-card runner-up-2">
+                    <div class="achievement-badge">Runner-up</div>
+                    <div class="rank-indicator">2</div>
+                    <div class="winner-profile">
+                        <div class="profile-initial">T</div>
+                        <div class="winner-name">TBD</div>
+                        <div class="team-identifier">Team #TBD</div>
+                    </div>
+                    <div class="performance-metrics">
+                        <div class="final-score">TBD</div>
+                        <div class="score-label">Final Score</div>
+                    </div>
+                </div>
+                
+                <div class="winner-card runner-up-3">
+                    <div class="achievement-badge">Third Place</div>
+                    <div class="rank-indicator">3</div>
+                    <div class="winner-profile">
+                        <div class="profile-initial">T</div>
+                        <div class="winner-name">TBD</div>
+                        <div class="team-identifier">Team #TBD</div>
+                    </div>
+                    <div class="performance-metrics">
+                        <div class="final-score">TBD</div>
+                        <div class="score-label">Final Score</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <h2>CONGRATULATIONS TO ALL CHAMPIONS</h2>
+        <p>The journey of innovation has reached its pinnacle. These visionary entrepreneurs have transformed ideas into reality.</p>
+        <p>Your dedication, creativity, and business acumen have set new standards for entrepreneurial excellence.</p>
+        <div class="copyright">© 2026 Bizcom - HBS. All rights reserved.</div>
+    </footer>
+
+    <script>
+        // Initialize App
+        document.addEventListener('DOMContentLoaded', function() {
+            initLoader();
+            initCursor();
+            initScrollEffects();
+        });
+
+        // Elegant Loader
+        function initLoader() {
+            const progressBar = document.querySelector('.progress-bar');
+            const loader = document.querySelector('.loader');
+            
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += Math.random() * 8 + 2;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        gsap.to(loader, {
+                            opacity: 0,
+                            duration: 1,
+                            ease: "power2.out",
+                            onComplete: () => {
+                                loader.style.display = 'none';
+                            }
+                        });
+                    }, 1000);
+                }
+                progressBar.style.width = progress + '%';
+            }, 100);
+        }
+
+        // Custom Cursor
+        function initCursor() {
+            const cursor = document.querySelector('.cursor');
+            
+            document.addEventListener('mousemove', (e) => {
+                gsap.to(cursor, {
+                    x: e.clientX - 10,
+                    y: e.clientY - 10,
+                    duration: 0.1,
+                    ease: "power2.out"
+                });
+            });
+
+            document.querySelectorAll('.podium, .scroll-indicator, .nav-btn').forEach(el => {
+                el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+                el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+            });
+        }
+
+
+
+        // Scroll Effects
+        function initScrollEffects() {
+            document.querySelector('.scroll-indicator').addEventListener('click', () => {
+                gsap.to(window, {
+                    scrollTo: window.innerHeight,
+                    duration: 1.5,
+                    ease: "power2.inOut"
+                });
+            });
+        }
+    </script>
+</body>
+</html>

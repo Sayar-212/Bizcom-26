@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bizcom'26 - Routing</title>
+</head>
+<body>
+    <script>
+        // Configuration for results availability
+        const resultsConfig = {
+            initialResults: false,  // Set to false to show "coming soon"
+            finalResults: false     // Set to false to show "coming soon"
+        };
+
+        // Get the type from URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const type = urlParams.get('type');
+
+        // Route based on type and availability
+        if (type === 'initial') {
+            if (resultsConfig.initialResults) {
+                window.location.href = 'initr.html';
+            } else {
+                window.location.href = 'initn.html';
+            }
+        } else if (type === 'final') {
+            if (resultsConfig.finalResults) {
+                window.location.href = 'final-results.html';
+            } else {
+                window.location.href = 'final-results.html';
+            }
+        } else {
+            // Default fallback to dashboard
+            window.location.href = 'dashboard.html';
+        }
+    </script>
+</body>
+</html>
